@@ -4,8 +4,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import com.google.cloud.firestore.annotation.DocumentId;
+
 @Data
 public class SystemLog {
+    @DocumentId
     private String id;
     private String userId;
     private LogAction action;

@@ -2,8 +2,11 @@ package dev.zac.lockbox.entity;
 
 import lombok.Data;
 
+import com.google.cloud.firestore.annotation.DocumentId;
+
 @Data
 public class Credential {
+    @DocumentId
     private String id;
     private String serviceId;
     private String username;

@@ -4,8 +4,11 @@ import lombok.Data;
 
 import java.util.List;
 
+import com.google.cloud.firestore.annotation.DocumentId;
+
 @Data
-public class Service {
+public class Company {
+    @DocumentId
     private String id;
     private String userId;
     private String name;
