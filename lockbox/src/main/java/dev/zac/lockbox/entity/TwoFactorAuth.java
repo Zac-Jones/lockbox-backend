@@ -8,6 +8,7 @@ import com.google.cloud.firestore.annotation.DocumentId;
 public class TwoFactorAuth {
     @DocumentId
     private String id;
-    private String serviceId;
+    private String companyId;
+    private String name;
     private String secret;
 }

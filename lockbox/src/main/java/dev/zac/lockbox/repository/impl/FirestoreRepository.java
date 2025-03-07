@@ -2,6 +2,8 @@ package dev.zac.lockbox.repository.impl;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+
+import dev.zac.lockbox.entity.User;
 import dev.zac.lockbox.repository.IFirestoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -31,6 +33,10 @@ public abstract class FirestoreRepository<T> implements IFirestoreRepository<T> 
     public void save(T entity) {
         try {
             DocumentReference docRef = firestore.collection(collectionName).document();
+
+            if (entity instanceof User) 
+                docRef = firestore.collection(collectionName).document(((User) entity).getId());
+
             ApiFuture<WriteResult> result = docRef.set(entity);
             result.get(); // Wait for the operation to complete
         } catch (InterruptedException | ExecutionException e) {

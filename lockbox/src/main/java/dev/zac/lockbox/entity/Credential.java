@@ -8,7 +8,7 @@ import com.google.cloud.firestore.annotation.DocumentId;
 public class Credential {
     @DocumentId
     private String id;
-    private String serviceId;
+    private String companyId;
     private String username;
     private String password;
 }
