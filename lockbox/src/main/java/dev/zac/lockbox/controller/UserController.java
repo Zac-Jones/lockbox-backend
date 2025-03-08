@@ -21,27 +21,27 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/api/register")
-    public ResponseEntity<User> createUser(@RequestHeader("Authorization") String authHeader, @RequestBody User user) {
+    public ResponseEntity<Void> createUser(@RequestHeader("Authorization") String authHeader, @RequestBody User user) {
         String idToken = authHeader.replace("Bearer ", "");
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             if (!decodedToken.getUid().equals(user.getId())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
             User existingUser = userService.getUserById(user.getId());
             if (existingUser != null) {
-                return ResponseEntity.ok(existingUser);
+                return ResponseEntity.status(HttpStatus.OK).build();
             }
 
             userService.createUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.getUserById(user.getId()));
+            return ResponseEntity.status(HttpStatus.CREATED).build();
 
         } catch (FirebaseAuthException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
