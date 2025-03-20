@@ -26,7 +26,10 @@ public abstract class FirestoreRepository<T> implements IFirestoreRepository<T> 
     protected FirestoreRepository() {
         this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
-        this.collectionName = entityClass.getSimpleName().toLowerCase() + "s";
+        if (entityClass.getSimpleName().equals("Company"))
+            this.collectionName = "companies";
+        else
+            this.collectionName = entityClass.getSimpleName().toLowerCase() + "s";
     }
     
     @Override
