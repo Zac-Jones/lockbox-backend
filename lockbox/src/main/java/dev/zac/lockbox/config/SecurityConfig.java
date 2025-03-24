@@ -1,4 +1,3 @@
-// lockbox/src/main/java/dev/zac/lockbox/config/SecurityConfig.java
 package dev.zac.lockbox.config;
 
 import org.springframework.context.annotation.Bean;
@@ -18,7 +17,7 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/register", "/api/login", "/api/add-company", "/api/companies").permitAll()
+                .requestMatchers("/api/register", "/api/login", "/api/add-company", "/api/companies", "/api/companies/{companyId}").permitAll()
                 .anyRequest().authenticated()
             );
 

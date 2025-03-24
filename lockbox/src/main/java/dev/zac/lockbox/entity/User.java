@@ -15,6 +15,5 @@ public class User {
     private String firstName;
     private String lastName;
     private Map<String, LocalDateTime> knownIpAddresses = new HashMap<>();
-    private List<String> companyIds = new ArrayList<>();
     private List<String> backupCodes = new ArrayList<>();
 }

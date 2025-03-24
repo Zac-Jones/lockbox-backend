@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -16,17 +18,12 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 
 import dev.zac.lockbox.entity.Company;
-import dev.zac.lockbox.entity.User;
 import dev.zac.lockbox.service.CompanyService;
-import dev.zac.lockbox.service.UserService;
 
 @RestController
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
-    
-    @Autowired
-    private UserService userService;
     
     @PostMapping("/api/add-company")
     public ResponseEntity<Void> createCompany(@RequestBody Company company, @RequestHeader("Authorization") String authHeader) {
@@ -37,11 +34,7 @@ public class CompanyController {
             
             company.setUserId(userId);
             
-            Company createdCompany = companyService.createCompany(company);
-            
-            User user = userService.getUserById(userId);
-            user.getCompanyIds().add(createdCompany.getId());
-            userService.updateUser(user);
+            companyService.createCompany(company);
             
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (FirebaseAuthException e) {
@@ -63,6 +56,29 @@ public class CompanyController {
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/api/companies/{companyId}")
+    public ResponseEntity<Void> deleteCompany(@PathVariable String companyId, @RequestHeader("Authorization") String authHeader) {
+        try {
+            String idToken = authHeader.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+            String userId = decodedToken.getUid();
+
+            if (!companyService.getCompanyById(companyId).getUserId().equals(userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            companyService.deleteCompany(companyId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        }
+        catch (FirebaseAuthException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
