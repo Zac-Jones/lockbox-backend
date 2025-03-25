@@ -35,4 +35,8 @@ public class TwoFactorAuthService {
     public List<TwoFactorAuth> getAllTwoFactorAuths() {
         return twoFactorAuthRepository.findAll();
     }
+
+    public List<TwoFactorAuth> getTwoFactorAuthsByCompanyId(String companyId) {
+        return twoFactorAuthRepository.findByCompanyId(companyId);
+    }
 }

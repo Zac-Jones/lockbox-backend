@@ -35,4 +35,8 @@ public class CredentialService {
     public List<Credential> getAllCredentials() {
         return credentialRepository.findAll();
     }
+
+    public List<Credential> getCredentialsByCompanyId(String companyId) {
+        return credentialRepository.findByCompanyId(companyId);
+    }
 }

@@ -18,12 +18,20 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 
 import dev.zac.lockbox.entity.Company;
+import dev.zac.lockbox.entity.Credential;
+import dev.zac.lockbox.entity.TwoFactorAuth;
 import dev.zac.lockbox.service.CompanyService;
+import dev.zac.lockbox.service.CredentialService;
+import dev.zac.lockbox.service.TwoFactorAuthService;
 
 @RestController
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private CredentialService credentialService;
+    @Autowired
+    private TwoFactorAuthService twoFactorAuthService;
     
     @PostMapping("/api/add-company")
     public ResponseEntity<Void> createCompany(@RequestBody Company company, @RequestHeader("Authorization") String authHeader) {
@@ -72,6 +80,12 @@ public class CompanyController {
             }
 
             companyService.deleteCompany(companyId);
+            for (Credential credential : credentialService.getCredentialsByCompanyId(companyId))
+                credentialService.deleteCredential(credential.getId());
+
+            for (TwoFactorAuth twoFactorAuth : twoFactorAuthService.getTwoFactorAuthsByCompanyId(companyId))
+                twoFactorAuthService.deleteTwoFactorAuth(twoFactorAuth.getId());
+
             return ResponseEntity.status(HttpStatus.OK).build();
 
         }
@@ -82,5 +96,4 @@ public class CompanyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
 }
