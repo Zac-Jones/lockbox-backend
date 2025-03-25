@@ -49,7 +49,7 @@ public class CredentialController {
     }
 
     @GetMapping("/api/{companyId}/credentials")
-    public ResponseEntity<List<Credential>> getCredentials(@RequestParam String companyId, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<List<Credential>> getCredentials(@PathVariable String companyId, @RequestHeader("Authorization") String authHeader) {
         try {
             String idToken = authHeader.replace("Bearer ", "");
             FirebaseAuth.getInstance().verifyIdToken(idToken);

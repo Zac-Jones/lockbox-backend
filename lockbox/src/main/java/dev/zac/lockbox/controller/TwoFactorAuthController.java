@@ -48,7 +48,7 @@ public class TwoFactorAuthController {
     }
 
     @GetMapping("/api/{companyId}/2fas")
-    public ResponseEntity<List<TwoFactorAuth>> getTwoFactorAuths(@RequestParam String companyId, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<List<TwoFactorAuth>> getTwoFactorAuths(@PathVariable String companyId, @RequestHeader("Authorization") String authHeader) {
         try {
             String idToken = authHeader.replace("Bearer ", "");
             FirebaseAuth.getInstance().verifyIdToken(idToken);
